@@ -15,7 +15,7 @@ public class RentalEquipment {
         this.dailyrate = dailyrate;
     }
 
-    public int getEquipmentid() { return equipmentid; }
+    public int getEquipmentid() { return equipmentid]; }
     public double getDailyrate() { return dailyrate; }
 
     public String toFileFormat() {

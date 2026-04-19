@@ -39,10 +39,10 @@ public class GUI {
                     case 4: displayEquipment(); break;
                     case 5: processRental(); break;
                     case 6: System.out.println("Goodbye!"); break;
-                    default: System.out.println("Invalid option. Please choose 1-6.");
+                    default: System.out.println("Invalid choose 1-6.");
                 }
             } catch (Exception e) {
-                System.out.println("ERROR: Invalid input. Please enter a number.");
+                System.out.println(" enter a number.");
             }
         }
     }
@@ -59,13 +59,13 @@ public class GUI {
 
         // VALIDATION: Ensure names are not empty
         if (fName.trim().isEmpty() || lName.trim().isEmpty()) {
-            System.out.println("ERROR: First and Last name cannot be empty. Please try again.");
+            System.out.println("First and Last name need input");
             return;
         }
 
         // VALIDATION: Ensure names don't contain numbers
-        if (!fName.matches("^[a-zA-Z\\s\\-']+$") || !lName.matches("^[a-zA-Z\\s\\-']+$")) {
-            System.out.println("ERROR: Names cannot contain numbers or special characters.");
+        if (fName.matches(".*\\d.*") || lName.matches(".*\\d.*")) {
+            System.out.println("names can only be letters");
             return;
         }
 
@@ -74,7 +74,7 @@ public class GUI {
         
         customers.add(newCust);
         saveCustomers();
-        System.out.println("Success! Customer saved.");
+        System.out.println("Customer saved");
     }
 
     private static void addEquipment() {
@@ -85,25 +85,25 @@ public class GUI {
             System.out.print("Enter Equipment Name: ");
             String name = scanner.nextLine();
             
-            // VALIDATION: Name checks
+            // check if name is ok
             if (name.trim().isEmpty()) {
-                System.out.println("ERROR: Equipment name cannot be empty.");
+                System.out.println("Equipment name cannot be empty.");
                 return;
             }
             if (name.matches("^\\d+$")) {
-                System.out.println("ERROR: Equipment name must contain letters.");
+                System.out.println("Equipment needs to be letters");
                 return;
             }
 
             System.out.print("Enter Description: ");
             String desc = scanner.nextLine();
             
-            System.out.print("Enter Daily Rate (e.g. 25.99): ");
+            System.out.print("Enter Daily Rate: ");
             double rate = Double.parseDouble(scanner.nextLine());
 
-            // VALIDATION: Logical check
+            // make sure the rate is higher then 0
             if (rate < 0) {
-                System.out.println("ERROR: Rate cannot be a negative number.");
+                System.out.println("Rate must be positve");
                 return;
             }
 
@@ -115,7 +115,7 @@ public class GUI {
             System.out.println("Success! Equipment saved.");
             
         } catch (NumberFormatException e) {
-            System.out.println("ERROR: Category ID and Daily Rate must be valid numbers.");
+            System.out.println("Category ID and Daily Rate must be valid numbers.");
         }
     }
 
@@ -124,23 +124,23 @@ public class GUI {
             System.out.print("Enter Customer ID: ");
             int custId = Integer.parseInt(scanner.nextLine());
             
-            // VALIDATION: Check if customer actually exists
+            // see if customer is real
             boolean customerExists = false;
             for (CustomerInformation c : customers) {
                 if (c.getCustomerid() == custId) {
                     customerExists = true;
-                    break;
+                    
                 }
             }
             if (!customerExists) {
-                System.out.println("ERROR: Customer ID not found.");
+                System.out.println("Customer ID not found");
                 return;
             }
             
             System.out.print("Enter Equipment ID: ");
             int equipId = Integer.parseInt(scanner.nextLine());
 
-            // VALIDATION: Check if equipment actually exists
+            // see if equpment is real
             RentalEquipment activeEquip = null;
             for (RentalEquipment e : inventory) {
                 if (e.getEquipmentid() == equipId) {
@@ -150,16 +150,16 @@ public class GUI {
             }
             
             if (activeEquip == null) {
-                System.out.println("ERROR: Equipment ID not found.");
+                System.out.println("Equipment ID not found.");
                 return;
             }
 
             System.out.print("Enter Rental Duration (days): ");
             int days = Integer.parseInt(scanner.nextLine());
             
-            // VALIDATION: Must rent for at least 1 day
+//            must rent for one or more day
             if (days <= 0) {
-                System.out.println("ERROR: Duration must be at least 1 day.");
+                System.out.println("Duration must be at least 1 day.");
                 return;
             }
             
@@ -168,7 +168,6 @@ public class GUI {
             cal.add(Calendar.DAY_OF_MONTH, days);
             Date returnDate = cal.getTime();
 
-            // Calculate total cost and round to nearest whole dollar for storage
             double costCalc = activeEquip.getDailyrate() * days;
             int totalCost = (int) Math.round(costCalc);
             
@@ -182,7 +181,7 @@ public class GUI {
             System.out.println(newRental.toString());
             
         } catch (NumberFormatException e) {
-            System.out.println("ERROR: Please enter valid numbers for IDs and Days.");
+            System.out.println("Please enter valid numbers for IDs and Days.");
         }
     }
 
@@ -197,10 +196,6 @@ public class GUI {
         if (inventory.isEmpty()) System.out.println("No equipment found.");
         for (RentalEquipment e : inventory) System.out.println(e.toString());
     }
-
-    // ==========================================
-    // FILE I/O METHODS 
-    // ==========================================
 
     private static void loadAllData() {
         try (Scanner sc = new Scanner(new File(CUST_FILE))) {
@@ -237,7 +232,7 @@ public class GUI {
             }
         } catch (Exception e) {}
     }
-
+// saves to file
     private static void saveCustomers() {
         try (PrintWriter writer = new PrintWriter(new File(CUST_FILE))) {
             for (CustomerInformation c : customers) writer.println(c.toFileFormat());
