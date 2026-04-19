@@ -1,0 +1,5 @@
+101;10;Hammer drill;25.99
+201;20;Chainsaw;49.99
+202;20;Lawn mower;19.99
+301;30;Small Compressor;14.99
+501;50;Brad Nailer;10.99
